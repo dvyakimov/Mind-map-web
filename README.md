@@ -5,3 +5,6 @@
 Для того, чтобы открыть файл, скачайте Xmind ZEN (https://www.xmind.net/zen/)
 
 Работа с приложением бесплатна.
+
+
+![Иллюстрация](https://github.com/dvyakimov/Mind-map-web/blob/master/Уязимости%20веб-приложений.png)
