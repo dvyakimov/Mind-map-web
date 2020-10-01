@@ -1,0 +1,200 @@
+rules:
+- id: sfs.golang.ssrf.context.newrequest
+  metadata:
+    cwe: "CWE-918"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $STRING := $CONTEXT.Request().Header.Get(...)      
+          ...
+          $VAL := $STRING + ...
+          ...
+          http.Get($VAL)
+      - pattern: |
+          $STRING,... := $CONTEXT.Request().Header.Get(...)      
+          ...
+          $VAL := $STRING + ...
+          ...
+          http.Get($VAL)
+      - pattern: |
+          $STRING := $CONTEXT.Request().Header.Get(...)      
+          ...
+          var $VAL = $STRING + ...
+          ...
+          http.Get($VAL)
+      - pattern: |
+          var $STRING = $CONTEXT.Request().Header.Get(...)      
+          ...
+          var $VAL = $STRING + ...
+          ...
+          http.Get($VAL)
+  languages:
+    - go
+  message: |
+    SSRF detected in Golang Code. There is no input validation beform request.
+  fix: |
+  severity: ERROR
+
+- id: sfs.golang.ssrf.stringconcat
+  metadata:
+    cwe: "CWE-918"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $URL := "http://" + ...
+          ...
+          http.Get($URL)
+      - pattern: |
+          $URL := "https://" + ...
+          ...
+          http.Get($URL)
+      - pattern: |
+          http.Get("https://" + ...)
+      - pattern: |
+          http.Get("http://" + ...)
+  languages:
+    - go
+  message: |
+    SSRF detected in Golang Code. Concant of strings without validation beform request. 
+  fix: |
+  severity: ERROR
+
+- id: sfs.golang.ssrf.formget
+  metadata:
+    cwe: "CWE-918"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $URL := $REQUEST.$FORM.Get(...)
+          ...
+          http.Get($URL)
+      - pattern: |
+          $URL,... := $REQUEST.$FORM.Get(...)
+          ...
+          http.Get($URL)
+      - pattern: |
+          http.Get(<...$REQUEST.$FORM.Get(...)...>)
+  languages:
+    - go
+  message: |
+    SSRF detected in Golang Code. Get user input without validation beform request. 
+  severity: ERROR
+
+- id: sfs.golang.ssrf.get
+  metadata:
+    cwe: "CWE-918"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $URL := $REQUEST.Get(...)
+          ...
+          http.Get($URL)
+      - pattern: |
+          $URL,... := $REQUEST.Get(...)
+          ...
+          http.Get($URL)
+      - pattern: |
+          http.Get(<...$REQUEST.Get(...)...>)
+  languages:
+    - go
+  message: |
+    SSRF detected in Golang Code. Get user input without validation beform request. 
+  severity: ERROR
+
+- id: sfs.golang.ssrf.query.newrequest
+  metadata:
+    cwe: "CWE-918"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $KEY,... := $REQUEST.URL.Query()[...]
+          ...
+          http.Get(<...$KEY...>)
+      - pattern: |
+          $KEY := $REQUEST.URL.Query()[...]
+          ...
+          http.Get(<...$KEY...>)
+      - pattern: |
+          var $KEY = $REQUEST.URL.Query()[...]
+          ...
+          http.Get(<...$KEY...>)
+      - pattern: |
+          $KEYS,... := $REQUEST.URL.Query()[...]
+          ...
+          $KEY := $KEYS[...]
+          ...
+          http.Get(<...$KEY...>)
+      - pattern: |
+          $VAL, ... := $URL.Parse(...)
+          ...
+          $INPUT := $VAL.$FUNC(...)
+          ...
+          http.Get($INPUT)
+      - pattern: |
+          $VAL, ... := $URL.Parse(...)
+          ...
+          $INPUT := $VAL.$FUNC.$SUBFUNC(...)
+          ...
+          http.Get($INPUT)
+      - pattern: |
+          $VAL, ... := $URL.Parse(...)
+          ...
+          $INPUT,... := $VAL.$FUNC(...)
+          ...
+          http.Get($INPUT)
+      - pattern: |
+          $VAL, ... := $URL.Parse(...)
+          ...
+          $INPUT,... := $VAL.$FUNC.$SUBFUNC(...)
+          ...
+          http.Get($INPUT)
+      - pattern: |
+          $VAL, ... := $URL.Parse(...)
+          ...
+          http.Get(<... $VAL ...>)
+  languages:
+    - go
+  message: |
+    SSRF detected in Golang Code. There is no input validation beform request.
+  fix: |
+  severity: ERROR
+
+- id: sfs.golang.ssrf.form.newrequest
+  metadata:
+    cwe: "CWE-918"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $VAL, ... := $REQUEST.FormFile(...)
+          ...
+          http.Get($REQ, <... $VAL ...>)
+      - pattern: |
+          $VAL, ... := $REQUEST.FormValue(...)
+          ...
+          http.Get(<... $VAL ...>)
+      - pattern: |
+          $VAL := $REQUEST.FormFile(...)
+          ...
+          http.Get(<... $VAL ...>)
+      - pattern: |
+          $VAL := $REQUEST.FormValue(...)
+          ...
+          http.Get(<... $VAL ...>)
+      - pattern: |
+          var $VAL = $REQUEST.FormFile(...)
+          ...
+          http.Get(<... $VAL ...>)
+      - pattern: |
+          var $VAL = $REQUEST.FormValue(...)
+          ...
+          http.Get(<... $VAL ...>)
+      - pattern: |
+          http.Get($REQUEST.FormFile(...))
+      - pattern: |
+          http.Get($REQUEST.FormValue(...))
+  languages:
+    - go
+  message: |
+    SSRF detected in Golang Code. There is no form validation beform request.
+  fix: |
+  severity: ERROR

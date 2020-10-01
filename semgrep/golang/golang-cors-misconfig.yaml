@@ -1,0 +1,45 @@
+rules:
+- id: sfs.golang.cors.any
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $VAL := "*"
+          ...
+          $W.Header().Set("Access-Control-Allow-Origin", $VAL)
+      - pattern: |
+          $W.Header().Set("Access-Control-Allow-Origin", "*")
+  message: |
+    Any Access-Control-Allow-Origin is denied 
+  languages:
+    - go 
+  fix: |
+  severity: ERROR
+
+- id: sfs.golang.cors.sameorigin
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $W.Header().Set("Access-Control-Allow-Origin", $REQ.Header.Get("Origin"))
+      - pattern: |
+          $VAL := $REQ.Header.Get("Origin")
+          ...
+          $W.Header().Set("Access-Control-Allow-Origin", <...$VAL...>)
+  message: |
+    Same client origin with Access-Control-Allow-Origin is denied
+  languages:
+    - go 
+  fix: |
+  severity: ERROR
+
+- id: sfs.golang.cors.defaultcors
+  pattern: |
+    cors.Default()
+  message: |
+    Default cors in rs-cors accept all origins.
+  languages:
+   - go 
+  fix: |
+  severity: ERROR
+
+
+

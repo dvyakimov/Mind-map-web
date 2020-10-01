@@ -1,0 +1,69 @@
+rules:
+- id: sfs.java.cors.any
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $RES.addHeader("=~/access-control-allow-origin/i", "=~/^*|null$/i");
+      - pattern: |
+          $RES.setHeader("=~/access-control-allow-origin/i", "=~/^*|null$/i");
+      - pattern: |
+          $RES.getHeaders().add("=~/access-control-allow-origin/i", "=~/^*|null$/i");
+      - pattern: |
+          $HEADERS.set("=~/access-control-allow-origin/i", "=~/^*|null$/i");
+      - pattern: |
+          $SWE.getResponse().getHeaders().add("=~/access-control-allow-origin/i", "=~/^*|null$/i");
+      - pattern: |
+          ResponseEntity.$RES().header("=~/access-control-allow-origin/i", "=~/^*|null$/i")
+      - pattern: |
+          ServerResponse.$RES().header("=~/access-control-allow-origin/i", "=~/^*|null$/i")
+  message: |
+    Permissive CORS policy will allow a malicious application to communicate with the victim application in an inappropriate way, leading to spoofing, data theft, relay and other attacks.
+  fix: |
+    
+  severity: WARNING
+
+- id: sfs.java.cors.getOrigin
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $RES.addHeader("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin());
+      - pattern: |
+          $RES.setHeader("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin());
+      - pattern: |
+          $RES.getHeaders().add("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin());
+      - pattern: |
+          $HEADERS.set("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin());
+      - pattern: |
+          $SWE.getResponse().getHeaders().add("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin());
+      - pattern: |
+          ResponseEntity.$RES().header("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin())
+      - pattern: |
+          ServerResponse.$RES().header("=~/access-control-allow-origin/i", $REQUEST.getHeaders().getOrigin())
+  message: |
+    Permissive CORS policy will allow a malicious application to communicate with the victim application in an inappropriate way, leading to spoofing, data theft, relay and other attacks.
+  fix: |
+    
+  severity: WARNING
+
+- id: sfs.java.cors.getHeader-origin
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $RES.addHeader("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"));
+      - pattern: |
+          $RES.setHeader("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"));
+      - pattern: |
+          $RES.getHeaders().add("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"));
+      - pattern: |
+          $HEADERS.set("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"));
+      - pattern: |
+          $SWE.getResponse().getHeaders().add("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"));
+      - pattern: |
+          ResponseEntity.$RES().header("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"))
+      - pattern: |
+          ServerResponse.$RES().header("=~/access-control-allow-origin/i", $REQUEST.getHeader("origin"))
+  message: |
+    Permissive CORS policy will allow a malicious application to communicate with the victim application in an inappropriate way, leading to spoofing, data theft, relay and other attacks.
+  fix: |
+    
+  severity: WARNING

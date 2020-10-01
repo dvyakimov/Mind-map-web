@@ -1,0 +1,196 @@
+rules:
+- id: sfs.javascript.open-redirect.func-get
+  metadata:
+    cwe: "CWE-601"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          $WINDOW.open($URL,...);
+      - pattern: |
+          $WINDOW.open($FUNC.get(...),...);
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          $WINDOW.location = $URL;
+      - pattern: |
+          $WINDOW.location = $FUNC.get(...);
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          $WINDOW.location.href = $URL;
+      - pattern: |
+          $WINDOW.location.href = $FUNC.get(...);
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          $WINDOW.location.replace($URL);
+      - pattern: |
+          $WINDOW.location.replace($FUNC.get(...));
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          location.href = $URL;
+      - pattern: |
+          location.href = $FUNC.get(...);
+      - pattern: |
+          var $URL = this.get(...);
+          ...
+          this.redirect($URL, ...);
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          $FUNCREDIR.redirect($URL, ...);
+      - pattern: |
+          $FUNCREDIR.redirect($FUNC.get(...), ...);
+  languages:
+    - javascript 
+  message: |
+    Open redirect by user url parameter. 
+  fix: |
+
+    
+  severity: WARNING
+
+- id: sfs.javascript.open-redirect.func-request-param
+  metadata:
+    cwe: "CWE-601"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          window.open($URL,...);
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          window.open($URL,...);
+      - pattern: |
+          window.open($FUNC.request.$PARAMS,...);
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          $WINDOW.location = $URL;
+      - pattern: |
+          $WINDOW.location = $FUNC.request.$PARAMS;
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          $WINDOW.location.href = $URL;
+      - pattern: |
+          $WINDOW.location.href = $FUNC.request.$PARAMS;
+      - pattern: |
+          var $URL = $FUNC.get(...);
+          ...
+          $WINDOW.location.replace($URL);
+      - pattern: |
+          $WINDOW.location.replace($FUNC.request.$PARAMS);
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          location.href = $URL;
+      - pattern: |
+          location.href = $FUNC.request.$PARAMS;
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          this.redirect($URL, ...);
+      - pattern: |
+          var $URL = $FUNC.request.$PARAMS;
+          ...
+          $FUNCREDIR.redirect($URL, ...);
+      - pattern: |
+          $FUNCREDIR.redirect($FUNC.request.$PARAMS, ...);
+  languages:
+    - javascript 
+  message: |
+    Open redirect by user url parameter. 
+  fix: |
+    
+  severity: WARNING
+
+
+- id: sfs.javascript.open-redirect.this-request-param
+  metadata:
+    cwe: "CWE-601"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          window.open($URL,...);
+      - pattern: |
+          window.open(this.request.$PARAMS,...);
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          $WINDOW.location = $URL;
+      - pattern: |
+          $WINDOW.location = this.request.$PARAMS;
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          $WINDOW.location.href = $URL;
+      - pattern: |
+          $WINDOW.location.href = this.request.$PARAMS;
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          $WINDOW.location.replace($URL);
+      - pattern: |
+          $WINDOW.location.replace(this.request.$PARAMS);
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          location.href = $URL;
+      - pattern: |
+          location.href = this.request.$PARAMS;
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          this.redirect($URL, ...);
+      - pattern: |
+          var $URL = this.request.$PARAMS;
+          ...
+          $FUNCREDIR.redirect($URL, ...);
+      - pattern: |
+          $FUNCREDIR.redirect(this.request.$PARAMS, ...);
+  languages:
+    - javascript 
+  message: |
+    Open redirect by user url parameter. 
+  fix: |
+    
+  severity: WARNING
+
+
+- id: sfs.javascript.open-redirect.this-request-param.redirect
+  metadata:
+    cwe: "CWE-601"
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          var $PATH = this.request.$PARAMS;
+          ...
+          this.redirect($PATH, ...);
+      - pattern: |
+          var $PATH = $FUNC.request.$PARAMS;
+          ...
+          $FUNC.redirect($PATH, ...);
+      - pattern: |
+          $FUNC.redirect($FUNC.request.$PARAMS, ...)
+      - pattern: |
+          this.redirect(this.request.$PARAMS, ...)
+      - pattern: |
+          var $PATH = this.request;
+          ...
+          this.redirect($PATH.$SUBPATH, ...);
+  languages:
+    - javascript 
+  message: |
+    Open redirect by user url parameter. 
+  fix: |
+    
+  severity: WARNING
+

@@ -1,0 +1,130 @@
+rules:
+- id: sfs.python.cors.any
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $SELF.send_header('Access-Control-Allow-Origin', '*')
+      - pattern: |
+          $VAL = '*'
+          ...
+          $SELF.send_header('Access-Control-Allow-Origin', $VAL)
+      - pattern: |
+          $CHERRYPY.response.headers["Access-Control-Allow-Origin"] = "*"
+      - pattern: |
+          $VAL = "*"
+          ...
+          $CHERRYPY.response.headers["Access-Control-Allow-Origin"] = $VAL
+      - pattern: |
+          CORS($APP, $RESOURCES={$KEY: {"origins": "*"}})
+      - pattern: |
+          CORS_ORIGIN_ALLOW_ALL = True
+      - pattern: |
+          ALLOWED_HOSTS=['*']
+      - pattern: |
+          $HEADER['Access-Control-Allow-Origin'] = "*"
+      - pattern: |
+          $VAL = "*"
+          ...
+          $HEADER['Access-Control-Allow-Origin'] = $VAL
+      - pattern: |
+          $HEADER['Access-Control-Allow-Origin'] = '*'
+      - pattern: |
+          $VAL = '*'
+          ...
+          $HEADER['Access-Control-Allow-Origin'] = '*'
+      - pattern: |
+          $RESP.headers.add("Access-Control-Allow-Origin", "*")
+      - pattern: |
+          $VAL = "*"
+          ...
+          $RESP.headers.add("Access-Control-Allow-Origin", "*")
+
+  message: |
+    Any Access-Control-Allow-Origin is denied
+  languages:
+    - python 
+  fix: |
+    
+  severity: WARNING
+
+- id: sfs.python.cors.response.origin
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $SELF.send_header('Access-Control-Allow-Origin', $FUNC['origin'])
+      - pattern: |
+          $VAL = $FUNC['origin']
+          ...
+          $SELF.send_header('Access-Control-Allow-Origin', $VAL)
+      - pattern: |
+          $CHERRYPY.response.headers["Access-Control-Allow-Origin"] = $FUNC['origin']
+      - pattern: |
+          $VAL = $FUNC['origin']
+          ...
+          $CHERRYPY.response.headers["Access-Control-Allow-Origin"] = $VAL
+      - pattern: |
+          CORS($APP, $RESOURCES={$KEY: {"origins": $FUNC['origin']}})
+      - pattern: |
+          CORS_ORIGIN_ALLOW_ALL = True
+      - pattern: |
+          $HEADER['Access-Control-Allow-Origin'] = $FUNC['origin']
+      - pattern: |
+          $VAL = $FUNC['origin']
+          ...
+          $HEADER['Access-Control-Allow-Origin'] = $VAL
+      - pattern: |
+          $HEADER['Access-Control-Allow-Origin'] = $FUNC['origin']
+      - pattern: |
+          $VAL = $FUNC['origin']
+          ...
+          $HEADER['Access-Control-Allow-Origin'] = '*'
+
+  message: |
+    Same client origin with Access-Control-Allow-Origin is denied
+  languages:
+    - python 
+  fix: |
+    
+  severity: WARNING
+
+
+- id: sfs.python.cors.response.meta.http_origin
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          $SELF.send_header('Access-Control-Allow-Origin', $REQUEST.$META.get('HTTP_ORIGIN'))
+      - pattern: |
+          $VAL = $REQUEST.$META.get('HTTP_ORIGIN')
+          ...
+          $SELF.send_header('Access-Control-Allow-Origin', $VAL)
+      - pattern: |
+          $CHERRYPY.response.headers["Access-Control-Allow-Origin"] = $REQUEST.$META.get('HTTP_ORIGIN')
+      - pattern: |
+          $VAL = $REQUEST.$META.get('HTTP_ORIGIN')
+          ...
+          $CHERRYPY.response.headers["Access-Control-Allow-Origin"] = $VAL
+      - pattern: |
+          CORS($APP, $RESOURCES={$KEY: {"origins": $REQUEST.$META.get('HTTP_ORIGIN')}})
+      - pattern: |
+          CORS_ORIGIN_ALLOW_ALL = True
+      - pattern: |
+          $HEADER['Access-Control-Allow-Origin'] = $REQUEST.$META.get('HTTP_ORIGIN')
+      - pattern: |
+          $VAL = $REQUEST.$META.get('HTTP_ORIGIN')
+          ...
+          $HEADER['Access-Control-Allow-Origin'] = $VAL
+      - pattern: |
+          $HEADER['Access-Control-Allow-Origin'] = $REQUEST.$META.get('HTTP_ORIGIN')
+      - pattern: |
+          $VAL = $REQUEST.$META.get('HTTP_ORIGIN')
+          ...
+          $HEADER['Access-Control-Allow-Origin'] = '*'
+
+  message: |
+    Same client origin with Access-Control-Allow-Origin is denied
+  languages:
+    - python 
+  fix: |
+    
+  severity: WARNING
+

@@ -1,0 +1,44 @@
+rules:
+- id: sfs.javascript.json-stringify.not-sanitize
+  languages:
+    - javascript
+    - typescript
+  patterns:
+    - pattern-either: 
+      - pattern: |
+          JSON.stringify(...)
+    - pattern-not-inside: |
+        var $DATA = $SANITIZE($DATA);
+        ...
+        JSON.stringify($DATA,...);
+    - pattern-not-inside: |
+        var $DATA = $SANITIZE($DATA);
+        ...
+        JSON.stringify($DATA);
+    - pattern-not-inside: |
+        const {$DATA} = $SANITIZE($DATA);
+        ...
+        JSON.stringify($DATA,...);
+    - pattern-not-inside: |
+        const {$DATA} = $SANITIZE($DATA);
+        ...
+        JSON.stringify($DATA);
+    - pattern-not: |
+        JSON.stringify($SANITIZE($DATA))
+    - pattern-not: |
+        JSON.stringify($SANITIZE($DATA),...)
+    - pattern-not-inside: |
+        if ($SANITIZE($DATA)) {
+          ...
+          JSON.stringify($DATA);
+        }
+    - pattern-not-inside: |
+        if ($SANITIZE($DATA)) {
+          ...
+          JSON.stringify($DATA,...);
+        }
+  message: |
+     Data to JSON.stringify shoud to be sanitized of validated
+  fix: |
+    
+  severity: ERROR
